@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>topbug</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css">
+</head>
+<body>
+    <nav class="alert alert-info container">
+        <h2 class="alert alert-success ">Koddagi xatolarni toping </h2>
+    </nav>
+    <section class="container alert alert-info">
+        {% block content %}
+            
+        {% endblock content %}
+    </section>
+</body>
+</html>

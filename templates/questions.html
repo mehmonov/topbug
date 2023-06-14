@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2 class="alert alert-danger">barcha savollar</h2>
+    <ul>
+      {% for qs in qs %}
+        <li><a href="{% url 'question' qs.id %}">{{ qs.quest }}</a></li>
+      {% endfor %}
+    </ul>
+
+{% endblock content %}

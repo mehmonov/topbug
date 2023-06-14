@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ACE in Action</title>
+<style type="text/css" media="screen">
+  #editor { 
+    height: 500px;
+}
+  #check-button {
+    margin-top: 10px;
+  }
+    
+</style>
+</head>
+<body>
+  <div class="q">
+
+    <h1>Savol </h1>
+    <p>
+        {{ question }}
+    </p>
+    {% comment %} <p>Xato urinishlar soni: <span id="attempts">{{ attempts }}</span></p> {% endcomment %}
+    <button id="reset-button" class="btn btn-danger">Qaytadan</button>
+
+</div>
+
+  <div class="container">
+    <div id="editor">
+       {{ code }}
+    </div>
+    <button id="check-button" class="btn btn-danger">Tekshirish</button>
+    <a href="{% url 'questions' %}" class="btn btn-dark">Boshqa savollar</a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.22.1/ace.js" integrity="sha512-ynf1nM33jHnuIDw3BuMxcOJ8oEqUQuQTB9jSL/VNWbfhlKmmUq7ksGbasQ6jCZdpyuusqIqeKfPrBZ5fbACMOA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/python");
+
+    document.getElementById('check-button').addEventListener('click', () => {
+      var code = editor.getValue();
+      fetch('{% url "compare_code" %}', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({code: code})
+      }).then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                editor.setValue(data.error);
+            } else {
+                editor.setValue(data.output);
+            }
+        });
+  });
+  document.getElementById('reset-button').addEventListener('click', () => {
+    fetch('{% url "reset_attempts" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+    }).then(response => response.json())
+      .then(data => {
+          {% comment %} document.getElementById('attempts').textContent = data.attempts; {% endcomment %}
+          location.reload();
+      });
+});
+
+
+
+
+</script>
+</body>
+</html>
+
+
+{% endblock %}
